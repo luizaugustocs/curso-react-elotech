@@ -20,9 +20,11 @@ class App extends Component {
 
     componentDidMount() {
         console.log('didmount');
-        firebase.auth().onAuthStateChanged(user => {
-            console.log('changed', user)
-            this.setState({user})
+        firebase.auth().getRedirectResult().then(result => {
+            if (result.user){
+            this.setState({user: result.user})
+
+            }
         });
     }
 

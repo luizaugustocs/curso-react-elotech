@@ -13,10 +13,6 @@ export const loginWithGoogle = () => {
     const provider = new firebase.auth.GoogleAuthProvider();
 
     return firebase.auth().signInWithRedirect(provider)
-        .then(result => {
-            console.log({result})
-
-        })
 };
 
 export const getCurrentUser = () => firebase.auth().currentUser;
