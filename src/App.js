@@ -8,23 +8,20 @@ import config from './config';
 
 firebase.initializeApp(config);
 firebase.firestore().settings({
-     timestampsInSnapshots: true
+    timestampsInSnapshots: true
 });
 
 class App extends Component {
 
-    state =  {
+    state = {
         user: undefined,
         tweets: []
     };
 
     componentDidMount() {
-        console.log('didmount');
-        firebase.auth().getRedirectResult().then(result => {
-            if (result.user){
-            this.setState({user: result.user})
-
-            }
+        firebase.auth().onAuthStateChanged(user => {
+            console.log('changed', user)
+            this.setState({user})
         });
     }
 
@@ -37,20 +34,19 @@ class App extends Component {
     };
 
     post = () => {
-        TweetService.newTweet({
-            text: 'teste'
-        }).then(() => ' postado')
+        TweetService.newTweet('teste').then(() => ' postado')
     };
 
     get = () => {
         TweetService.getUserTweets(this.state.user)
             .then(result => {
-               this.setState({tweets: result})
+                this.setState({tweets: result})
             })
     };
 
-    follow =() => {
+    follow = () => {
         UserService.followUser({uid: 'xZNtwPqijaMzpZ9Iw4e9y3yY0le2'})
+            .then(() => console.log('follow'))
     }
 
     logout = () => {
@@ -62,17 +58,30 @@ class App extends Component {
         TweetService.getUserFeed(this.state.user)
             .then((result) => this.setState({tweets: result}))
     };
+
+    create = () => {
+        UserService.createUser("teste2324@gmail.com", '1234567890')
+            .then((user) => {
+                console.log({user})
+            })
+    };
+
+    getUserData = (userId) => {
+        UserService.getUserData(userId)
+            .then((user) => console.log(user.data()))
+    }
+
     render() {
-       const {user, tweets} = this.state;
-console.log({user})
+        const {user, tweets} = this.state;
 
         return (
             <h1>
                 {user ? <button onClick={this.logout}>logout</button> : (
-                <React.Fragment>
-                    <button onClick={this.loginEmail}>loginEmail</button>
-                <button onClick={this.loginGoogle}>loginGoogle</button>
-                </React.Fragment>
+                    <React.Fragment>
+                        <button onClick={this.loginEmail}>loginEmail</button>
+                        <button onClick={this.loginGoogle}>loginGoogle</button>
+                        <button onClick={this.create}>create User</button>
+                    </React.Fragment>
                 )}
                 <button onClick={this.post}>post</button>
                 <button onClick={this.get}>get</button>
@@ -83,10 +92,11 @@ console.log({user})
 
                 {tweets.length === 0 ? 'empty feed' : ' feed with ' + tweets.length}
                 {tweets.map(tweet => {
-                    console.log(tweet.data().timestamp)
-                    return <div key={tweet.data().id}>
+                    console.log(tweet.data().timestamp);
+                    return <div key={tweet.data().uid}>
                         <h3>{tweet.data().content}</h3>
                         <h5>{tweet.data().authorName}</h5>
+                        <a onClick={() => this.getUserData(tweet.data().author)}>{`@${tweet.data().authorUserName}`}</a>
                         <h5>{tweet.data().timestamp.toDate().toISOString()}</h5>
                     </div>
                 })}
