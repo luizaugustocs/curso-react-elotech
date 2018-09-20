@@ -69,7 +69,12 @@ class App extends Component {
     getUserData = (userId) => {
         UserService.getUserData(userId)
             .then((user) => console.log(user.data()))
-    }
+    };
+
+    search = () => {
+        UserService.searchUser()
+          .then(users => users.map(user => user.data()).map(console.log))
+    };
 
     render() {
         const {user, tweets} = this.state;
@@ -87,6 +92,7 @@ class App extends Component {
                 <button onClick={this.get}>get</button>
                 <button onClick={this.follow}>follow</button>
                 <button onClick={this.feed}>feed</button>
+                <button onClick={this.search}>search</button>
 
                 {user && user.displayName}
 

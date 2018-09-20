@@ -18,3 +18,11 @@ export const updateUserData = ({ displayName = '', userName = '', photoURL = '' 
 export const getUserData = userId => firebase.firestore().doc(`/users/${userId}`).get();
 
 export const createUser = (email, password) => firebase.auth().createUserWithEmailAndPassword(email, password);
+
+export const searchUser = (searchText = '') =>
+  firebase.firestore().collection('/users')
+    .get()
+    .then(users => users.docs.filter(user => {
+      const data = user.data();
+      return (data.userName && data.userName.includes(searchText)) || (data.displayName && data.displayName.includes(searchText))
+    }));
