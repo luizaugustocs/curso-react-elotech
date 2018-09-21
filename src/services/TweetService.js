@@ -1,19 +1,22 @@
+// @flow
 import firebase from 'firebase';
 import * as AuthService from './AuthService';
 
-export const newTweet =  (tweetContent) => {
-    const currentUserId = AuthService.getCurrentUser().uid;
+export const newTweet = (tweetContent: string): Promise<$npm$firebase$firestore$DocumentReference> => {
+    const currentUser = AuthService.getCurrentUser();
+    if (!currentUser) {
+        return Promise.reject();
+    }
     const parsedTweet = {
         content: tweetContent,
-        author: currentUserId,
+        author: currentUser.uid,
         timestamp: firebase.firestore.FieldValue.serverTimestamp()
     };
 
-    return firebase.firestore().collection(`/tweets`)
-        .add(parsedTweet)
+    return firebase.firestore().collection(`/tweets`).add(parsedTweet)
 };
 
-export const getUserTweets = (user, lastTweet) => {
+export const getUserTweets = (user: UserData, lastTweet?: $npm$firebase$firestore$DocumentReference): Promise<Array<$npm$firebase$firestore$DocumentSnapshot>> => {
 
     const query = firebase.firestore().collection(`/tweets`)
         .where('author', '==', user.uid)
@@ -26,7 +29,7 @@ export const getUserTweets = (user, lastTweet) => {
         .then(tweets => tweets.filter(tweet => tweet.exists))
 };
 
-export const getUserFeed = (user, lastTweet) => {
+export const getUserFeed = (user: UserData, lastTweet?: $npm$firebase$firestore$DocumentReference) : Promise<Array<$npm$firebase$firestore$DocumentSnapshot>> => {
     const query = firebase.firestore().collection(`/users/${user.uid}/feed/`)
         .orderBy('timestamp', 'desc')
         .limit(20);
