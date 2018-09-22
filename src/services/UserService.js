@@ -1,33 +1,34 @@
-// @flow
 import firebase from 'firebase';
-import * as AuthService from './AuthService';
+import AuthService from './AuthService';
 
-export const followUser = (userToFollow: UserData): Promise<void> => {
-    const currentUser = AuthService.getCurrentUser();
-    if (!currentUser)
-        return Promise.reject();
-    return firebase.firestore().doc(`/users/${userToFollow.uid}/followers/${currentUser.uid}`)
-        .set({timestamp: firebase.firestore.FieldValue.serverTimestamp()})
+/** @type {import('../../types/index').UserService} */
+const UserService = {
+    followUser: (userToFollow) => {
+        const currentUser = AuthService.getCurrentUser();
+        if (!currentUser)
+            return Promise.reject();
+        return firebase.firestore().doc(`/users/${userToFollow.uid}/followers/${currentUser.uid}`)
+            .set({timestamp: firebase.firestore.FieldValue.serverTimestamp()})
+    },
+    updateUserData: (userData) => {
+        const currentUser = AuthService.getCurrentUser();
+        if (!currentUser)
+            return Promise.reject();
+        return firebase.firestore().doc(`/users/${currentUser.uid}`).set(userData, {merge: true})
+    },
+    getUserData: (userId) =>
+        firebase.firestore().doc(`/users/${userId}`).get()
+            .then(user => user.data()),
+    searchUser: (searchText) =>
+        firebase.firestore().collection('/users')
+            .get()
+            .then(users =>
+                users.docs
+                    .map(user => user.data())
+                    .filter(user => {
+                        return (user.userName && user.userName.includes(searchText)) || (user.displayName && user.displayName.includes(searchText))
+                    })
+            )
 };
 
-export const updateUserData = (userData: UpdateUser): Promise<void> => {
-    const currentUser = AuthService.getCurrentUser();
-    if (!currentUser)
-        return Promise.reject();
-    return firebase.firestore().doc(`/users/${currentUser.uid}`).set(userData, {merge: true})
-};
-
-export const getUserData = (userId: string): Promise<UserData> =>
-    firebase.firestore().doc(`/users/${userId}`).get()
-        .then(user => user.data());
-
-export const searchUser = (searchText?: string = ''): Promise<Array<UserData>> =>
-    firebase.firestore().collection('/users')
-        .get()
-        .then(users =>
-            users.docs
-                .map(user => (user.data() : UserData))
-                .filter((user: UserData) => {
-                    return (user.userName && user.userName.includes(searchText)) || (user.displayName && user.displayName.includes(searchText))
-                })
-        );
+export default UserService;
