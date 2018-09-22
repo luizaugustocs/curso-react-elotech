@@ -1,16 +1,17 @@
-// @flow
 import firebase from 'firebase';
 
-export const onAuthChange = (callback: (?$npm$firebase$auth$User) => void | Promise<void>): void => {
-    firebase.auth().onAuthStateChanged(callback);
+/** @type {import('../../types/index').AuthService} */
+const AuthService = {
+    onAuthChange: (callback) => {
+        firebase.auth().onAuthStateChanged(callback);
+    },
+    loginWithGoogle: () => {
+        const provider = new firebase.auth.GoogleAuthProvider();
+        return firebase.auth().signInWithPopup(provider)
+            .then(credentials => credentials.user)
+    },
+    getCurrentUser: () => firebase.auth().currentUser,
+    logout: () => firebase.auth().signOut()
 };
 
-export const loginWithGoogle = () : Promise<$npm$firebase$auth$User> => {
-    const provider = new firebase.auth.GoogleAuthProvider();
-    return firebase.auth().signInWithPopup(provider)
-        .then(credentials => credentials.user)
-};
-
-export const getCurrentUser = (): ?$npm$firebase$auth$User => firebase.auth().currentUser;
-
-export const logout = () : Promise<void> => firebase.auth().signOut();
+export default AuthService;

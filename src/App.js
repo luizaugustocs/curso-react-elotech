@@ -1,8 +1,8 @@
 import React from 'react';
 import './App.css';
-import * as AuthService from './services/AuthService'
-import * as TweetService from './services/TweetService'
-import * as UserService from './services/UserService'
+import AuthService from './services/AuthService'
+import TweetService from './services/TweetService'
+import UserService from './services/UserService'
 import {Button, Col, Container, Navbar, Row, ButtonToolbar, ListGroup} from 'react-bootstrap';
 
 class App extends React.Component {
