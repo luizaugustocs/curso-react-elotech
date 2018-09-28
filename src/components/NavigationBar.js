@@ -4,26 +4,22 @@ import { NavLink } from 'react-router-dom';
 
 const NavigationBar = () => {
   return (
-    <Navbar bg="light" expand="lg">
-    <Navbar.Brand>Elo Twitter</Navbar.Brand>
-    <Navbar.Toggle aria-controls="basic-navbar-nav" />
-    <Navbar.Collapse id="basic-navbar-nav">
+    <Navbar bg="light" style={{ marginBottom: 20 }}>
       <Nav className="mr-auto">
         <NavLink exact className="nav-link" to="/">
-          Home
-        </NavLink>
-        <NavLink exact className="nav-link" to="/configuracao">
-          Configuração
+          <Navbar.Brand>Elo Twitter</Navbar.Brand>
         </NavLink>
       </Nav>
-      <Nav className="justify-content-end" activeKey="/home">
-        <NavLink exact className="nav-link" to="/login">
+      <Nav className="justify-content-end">
+        <NavLink className="nav-link" to="/configuracao">
+          Configuração
+        </NavLink>
+        <NavLink className="nav-link" to="/login">
           Entrar
         </NavLink>
       </Nav>
-    </Navbar.Collapse>
-  </Navbar>
+    </Navbar>
   );
-}
+};
 
 export { NavigationBar };
