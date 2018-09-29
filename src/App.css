@@ -1,0 +1,20 @@
+.profile-photo {
+  max-height: 100px;
+  max-width: 100px;
+}
+
+.profile-data {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  margin-left: 10px;
+}
+
+.profile-section {
+  display: flex;
+  align-items: center;
+  border: 1px solid rgba(0,0,0,.125);
+  border-radius: .25rem;
+  padding-right: 5px;
+  margin-top: 10px;
+}
