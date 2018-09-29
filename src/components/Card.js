@@ -1,16 +1,29 @@
 import React from 'react';
+import './Card.css';
 
-const imgUrl = 'https://www.imgworlds.com/wp-content/themes/IMG/img/phase3/slides/lostvalley-raptor.png';
+const imgUrl = `
+  https://www.imgworlds.com/wp-content/themes/IMG/img/phase3/slides/lostvalley-raptor.png
+`;
 
 const Card = ({ username, tweet }) => {
 
   return (
-    <div style={{ height: 250, width: 250, backgroundColor: '#f5f5f5', border: '1px solid black'}}>
-      <div style={{ display: 'flex', flexDirection: 'row' }}>
-        <img src={imgUrl} alt="img" width={50} height={50} style={{ margin: 10 }} />
-        <p style={{ alignSelf: 'center'}}>{username}</p>
+    <div className="cardContainer">
+      <div className="cardHeader">
+        <img
+          alt="img"
+          src={imgUrl}
+          height={50}
+          width={50}
+        />
+        <p>@username_test</p>
       </div>
-      <p>{tweet}</p>
+      <div className="cardContent">
+        <p>{tweet}</p>
+      </div>
+      <div className="cardFooter">
+        <p>{new Date().toJSON()}</p>
+      </div>
     </div>
   );
 };

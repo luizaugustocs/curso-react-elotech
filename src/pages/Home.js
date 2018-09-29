@@ -1,6 +1,5 @@
-import React, { Component, Fragment } from 'react';
-import { Input } from '../components';
-import TweetList from './TweetList';
+import React, { Component } from 'react';
+import { Input, CardList } from '../components';
 
 class Home extends Component {
   state = {
@@ -49,8 +48,8 @@ class Home extends Component {
           </form>
         </div>
         <hr />
-        <div>
-          <TweetList list={tweetList} />
+        <div style={{ display: 'flex', flexDirection: 'row' }}>
+          <CardList list={tweetList} />
         </div>
       </div>
     );
